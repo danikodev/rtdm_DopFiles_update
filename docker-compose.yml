@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  rtdm_server:
+    build:
+      context: ./ServiceMain
+      dockerfile: Dockerfile
+    image: rtdm_server:latest
+    volumes:
+      - ./data:/app/data  # Общая база данных по пути data/base.db
+      - ./backup:/app/backup  # Папка для бэкапов на одном уровне с сервисами
+    ports:
+      - "8070:8070"
+    restart: unless-stopped  
+    environment:
+      - YANDEX_TOKEN="y0__wgBEMn84L0GGJrSNCDstPmLEj3mibU9UTJQhVvzwdQpi-g7DeLm"  # Передача переменной окружения
+
+  rtdm_yandex:
+    build:
+      context: ./ServiceYandex
+      dockerfile: Dockerfile
+    image: rtdm_yandex:latest
+    volumes:
+      - ./data:/app/data  # Общая база данных по пути data/base.db
+    ports:
+      - "8080:8080"  # Измените порт, если необходимо
+    restart: unless-stopped  
+    environment:
+      - YANDEX_TOKEN="y0__wgBEMn84L0GGJrSNCDstPmLEj3mibU9UTJQhVvzwdQpi-g7DeLm"  # Передача переменной окружения
